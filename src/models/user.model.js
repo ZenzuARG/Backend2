@@ -10,7 +10,9 @@ const userSchema = new mongoose.Schema(
     age: { type: Number, required: true },
     password: { type: String, required: true }, // hash
     cart: { type: mongoose.Schema.Types.ObjectId, ref: "carts" },
-    role: { type: String, default: "user" }
+    role: { type: String, default: "user" },
+    resetPasswordToken: { type: String, default: null },
+    resetPasswordExpires: { type: Date, default: null }
   },
   { timestamps: true }
 );

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import { generateToken } from "../utils/jwt.js";
+import UserDTO from "../dtos/UserDTO.js";
+
 
 const router = Router();
 
@@ -59,7 +61,7 @@ router.post("/login", (req, res, next) => {
   })(req, res, next);
 });
 
-// GET /api/sessions/current
+// GET /api/sessions/current -> DTO
 router.get("/current", (req, res, next) => {
   passport.authenticate("current", { session: false }, (err, user) => {
     if (err) {
@@ -76,11 +78,23 @@ router.get("/current", (req, res, next) => {
       });
     }
 
+    const safeUser = new UserDTO(user);
+
     return res.send({
       status: "success",
-      payload: user
+      payload: safeUser
     });
   })(req, res, next);
 });
+
+// POST /api/sessions/logout
+router.post("/logout", (req, res) => {
+  res.clearCookie("jwt");
+  return res.status(200).send({
+    status: "success",
+    message: "Logout exitoso"
+  });
+});
+
 
 export default router;
